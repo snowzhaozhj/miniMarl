@@ -1,5 +1,5 @@
-#ifndef MINIMARL_INCLUDE_DEBUG_HPP_
-#define MINIMARL_INCLUDE_DEBUG_HPP_
+#ifndef MINIMARL_INCLUDE_MARL_DEBUG_HPP_
+#define MINIMARL_INCLUDE_MARL_DEBUG_HPP_
 
 #include "export.hpp"
 
@@ -27,4 +27,4 @@ void assert_has_bound_scheduler(const char *feature);
 #define MARL_WARN(msg, ...) marl::warn("WARNING: " msg "\n", ##_VA_ARGS__);
 
 }
-#endif //MINIMARL_INCLUDE_DEBUG_HPP_
+#endif //MINIMARL_INCLUDE_MARL_DEBUG_HPP_
