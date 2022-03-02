@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(MINIMARL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(MINIMARL_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+set(MINIMARL_TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test)
 
 option(MINIMARL_BUILD_TESTS "" ON)
 
@@ -38,4 +39,14 @@ target_include_directories(miniMarl
         )
 target_compile_options(miniMarl
         PRIVATE "-fvisibility=hidden")
+
+add_executable(miniMarlTests "")
+target_sources(miniMarlTests
+        PRIVATE
+            "${MINIMARL_TEST_DIR}/marl_test.hpp"
+            "${MINIMARL_TEST_DIR}/marl_test.cpp"
+            "${MINIMARL_TEST_DIR}/memory_test.cpp"
+        )
+target_link_libraries(miniMarlTests miniMarl gmock gtest)
+add_test(NAME miniMarlTests COMMAND miniMarlTests)
 
