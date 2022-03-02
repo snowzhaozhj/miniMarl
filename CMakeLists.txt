@@ -27,9 +27,11 @@ add_library(miniMarl "")
 target_sources(miniMarl
         PRIVATE
             "${MINIMARL_SOURCE_DIR}/debug.cpp"
+            "${MINIMARL_SOURCE_DIR}/memory.cpp"
         PUBLIC
             "${MINIMARL_INCLUDE_DIR}/marl/export.hpp"
             "${MINIMARL_INCLUDE_DIR}/marl/debug.hpp"
+            "${MINIMARL_INCLUDE_DIR}/marl/memory.hpp"
         )
 target_include_directories(miniMarl
         PUBLIC ${MINIMARL_INCLUDE_DIR}
