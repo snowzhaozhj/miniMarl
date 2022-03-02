@@ -272,6 +272,8 @@ struct StlAllocator {
   using const_reference = const T &;
   using size_type = size_t;
   using difference_type = size_t;
+  using propagate_on_container_move_assignment = std::true_type;
+  using is_always_equal = std::true_type;
 
   /// 作为另一种类型的STL分配器
   template<typename U>
@@ -322,6 +324,8 @@ struct StlAllocator {
   /// 析构p位置的U类型对象，但并不释放内存
   template<typename U>
   inline void destroy(U *p) { p->~U(); }
+
+  friend constexpr bool operator==(const StlAllocator &, const StlAllocator &) { return true; }
 
  private:
   inline Allocation::Request request(size_t n);
