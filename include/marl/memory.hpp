@@ -164,7 +164,10 @@ Allocator::unique_ptr<T> Allocator::make_unique_n(size_t n, Args &&... args) {
   request.usage = Allocation::Usage::Create;
 
   auto alloc = allocate(request);
-  new(alloc.ptr) T(std::forward<Args>(args)...);
+  auto p = reinterpret_cast<T *>(alloc.ptr);
+  for (size_t i = 0; i < n; ++i, ++p) {
+    new(p) T(std::forward<Args>(args)...);
+  }
   return unique_ptr<T>(reinterpret_cast<T *>(alloc.ptr), Deleter{this, n});
 }
 

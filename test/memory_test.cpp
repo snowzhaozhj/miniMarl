@@ -73,9 +73,17 @@ TEST_F(AllocatorTest, Guards) {
   EXPECT_DEATH(ptr[marl::pageSize()] = 1, "");
 }
 
+struct SimpleStruct {
+  std::string name;
+  int value;
+};
+
 class ClassWithoutArgs {
  public:
   ClassWithoutArgs() = default;
+  ClassWithoutArgs(const ClassWithoutArgs &) {}
+  ClassWithoutArgs &operator=(const ClassWithoutArgs &) = default;
+
   [[nodiscard]] const std::string &GetName() const { return name_; }
   void SetName(const std::string &name) { name_ = name; }
  private:
@@ -96,6 +104,12 @@ class ClassWithArgs {
 };
 
 TEST_F(AllocatorTest, MakeUnique) {
+  auto simple_struct = allocator_->make_unique<SimpleStruct>();
+  simple_struct->name = "unique";
+  simple_struct->value = 2;
+  EXPECT_EQ(simple_struct->name, "unique");
+  EXPECT_EQ(simple_struct->value, 2);
+
   auto class_without_args = allocator_->make_unique<ClassWithoutArgs>();
   class_without_args->SetName("unique");
   EXPECT_EQ(class_without_args->GetName(), "unique");
@@ -107,24 +121,37 @@ TEST_F(AllocatorTest, MakeUnique) {
 
 // TODO: Test Failed, Need To Fix
 TEST_F(AllocatorTest, MakeUniqueN) {
-  auto no_args_array = allocator_->make_unique_n<ClassWithoutArgs>(5);
+  size_t array_size = 2;
+  auto struct_array = allocator_->make_unique_n<SimpleStruct>(array_size);
+  SimpleStruct simple_struct;
+  simple_struct.name = "unique";
+  simple_struct.value = 2;
+  for (int i = 0; i < array_size; ++i) {
+    struct_array.get()[i] = simple_struct;
+  }
+  for (int i = 0; i < array_size; ++i) {
+    EXPECT_EQ(struct_array.get()[i].name, "unique");
+    EXPECT_EQ(struct_array.get()[i].value, 2);
+  }
+
+  auto no_args_array = allocator_->make_unique_n<ClassWithoutArgs>(array_size);
   ClassWithoutArgs class_without_args;
   class_without_args.SetName("Lily");
-  for (int i = 0; i < 5; ++i) {
+  for (int i = 0; i < array_size; ++i) {
     no_args_array.get()[i] = class_without_args;
   }
-  for (int i = 0; i < 5; ++i) {
+  for (int i = 0; i < array_size; ++i) {
     EXPECT_EQ(no_args_array.get()[i].GetName(), "Lily");
   }
 
-  auto args_array = allocator_->make_unique_n<ClassWithArgs>(5, "unique", 2);
+  auto args_array = allocator_->make_unique_n<ClassWithArgs>(array_size, "unique", 2);
   EXPECT_EQ(args_array->GetName(), "unique");
   EXPECT_EQ(args_array->GetValue(), 2);
   ClassWithArgs class_with_args{"Lily", 3};
-  for (int i = 0; i < 5; ++i) {
+  for (int i = 0; i < array_size; ++i) {
     args_array.get()[i] = class_with_args;
   }
-  for (int i = 0; i < 5; ++i) {
+  for (int i = 0; i < array_size; ++i) {
     EXPECT_EQ(args_array.get()[i].GetName(), "Lily");
     EXPECT_EQ(args_array.get()[i].GetValue(), 3);
   }
