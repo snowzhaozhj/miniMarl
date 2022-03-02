@@ -72,3 +72,60 @@ TEST_F(AllocatorTest, Guards) {
   EXPECT_DEATH(ptr[-1] = 1, "");
   EXPECT_DEATH(ptr[marl::pageSize()] = 1, "");
 }
+
+class ClassWithoutArgs {
+ public:
+  ClassWithoutArgs() = default;
+  [[nodiscard]] const std::string &GetName() const { return name_; }
+  void SetName(const std::string &name) { name_ = name; }
+ private:
+  std::string name_{};
+};
+
+class ClassWithArgs {
+ public:
+  ClassWithArgs(std::string name, int value)
+      : name_(std::move(name)), value_(value) {}
+  [[nodiscard]] const std::string &GetName() const { return name_; }
+  [[nodiscard]] int GetValue() const { return value_; }
+  void SetName(const std::string &name) { name_ = name; }
+  void SetValue(int value) { value_ = value; }
+ private:
+  std::string name_;
+  int value_;
+};
+
+TEST_F(AllocatorTest, MakeUnique) {
+  auto class_without_args = allocator_->make_unique<ClassWithoutArgs>();
+  class_without_args->SetName("unique");
+  EXPECT_EQ(class_without_args->GetName(), "unique");
+
+  auto class_with_args = allocator_->make_unique<ClassWithArgs>("unique", 2);
+  EXPECT_EQ(class_with_args->GetName(), "unique");
+  EXPECT_EQ(class_with_args->GetValue(), 2);
+}
+
+// TODO: Test Failed, Need To Fix
+TEST_F(AllocatorTest, MakeUniqueN) {
+  auto no_args_array = allocator_->make_unique_n<ClassWithoutArgs>(5);
+  ClassWithoutArgs class_without_args;
+  class_without_args.SetName("Lily");
+  for (int i = 0; i < 5; ++i) {
+    no_args_array.get()[i] = class_without_args;
+  }
+  for (int i = 0; i < 5; ++i) {
+    EXPECT_EQ(no_args_array.get()[i].GetName(), "Lily");
+  }
+
+  auto args_array = allocator_->make_unique_n<ClassWithArgs>(5, "unique", 2);
+  EXPECT_EQ(args_array->GetName(), "unique");
+  EXPECT_EQ(args_array->GetValue(), 2);
+  ClassWithArgs class_with_args{"Lily", 3};
+  for (int i = 0; i < 5; ++i) {
+    args_array.get()[i] = class_with_args;
+  }
+  for (int i = 0; i < 5; ++i) {
+    EXPECT_EQ(args_array.get()[i].GetName(), "Lily");
+    EXPECT_EQ(args_array.get()[i].GetValue(), 3);
+  }
+}
