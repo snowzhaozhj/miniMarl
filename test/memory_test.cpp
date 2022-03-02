@@ -2,6 +2,8 @@
 
 #include "marl_test.hpp"
 
+#include <vector>
+
 class AllocatorTest : public testing::Test {
  public:
   marl::Allocator *allocator_ = marl::Allocator::Default;
@@ -155,4 +157,65 @@ TEST_F(AllocatorTest, MakeUniqueN) {
     EXPECT_EQ(args_array.get()[i].GetName(), "Lily");
     EXPECT_EQ(args_array.get()[i].GetValue(), 3);
   }
+}
+
+TEST_F(AllocatorTest, MakeShared) {
+  auto simple_struct = allocator_->make_shared<SimpleStruct>();
+  simple_struct->name = "unique";
+  simple_struct->value = 2;
+  EXPECT_EQ(simple_struct->name, "unique");
+  EXPECT_EQ(simple_struct->value, 2);
+
+  auto class_without_args = allocator_->make_shared<ClassWithoutArgs>();
+  class_without_args->SetName("unique");
+  EXPECT_EQ(class_without_args->GetName(), "unique");
+
+  auto class_with_args = allocator_->make_shared<ClassWithArgs>("unique", 2);
+  EXPECT_EQ(class_with_args->GetName(), "unique");
+  EXPECT_EQ(class_with_args->GetValue(), 2);
+}
+
+TEST_F(AllocatorTest, TrackedAllocator) {
+  marl::TrackedAllocator tracked_allocator{allocator_};
+  auto simple_struct1 = tracked_allocator.create<SimpleStruct>();
+  auto stats = tracked_allocator.stats();
+  EXPECT_EQ(stats.numAllocations(), 1);
+  EXPECT_EQ(stats.bytesAllocated(), sizeof(SimpleStruct));
+
+  auto simple_struct2 = tracked_allocator.create<SimpleStruct>();
+  stats = tracked_allocator.stats();
+  EXPECT_EQ(stats.numAllocations(), 2);
+  EXPECT_EQ(stats.bytesAllocated(), 2 * sizeof(SimpleStruct));
+
+  tracked_allocator.destroy(simple_struct2);
+  stats = tracked_allocator.stats();
+  EXPECT_EQ(stats.numAllocations(), 1);
+  EXPECT_EQ(stats.bytesAllocated(), sizeof(SimpleStruct));
+
+  tracked_allocator.destroy(simple_struct1);
+  stats = tracked_allocator.stats();
+  EXPECT_EQ(stats.numAllocations(), 0);
+  EXPECT_EQ(stats.bytesAllocated(), 0);
+}
+
+TEST_F(AllocatorTest, StlAllocator) {
+  std::vector<int, marl::StlAllocator<int>> int_vec{marl::StlAllocator<int>(allocator_)};
+  int element_num = 20;
+  int_vec.reserve(element_num);
+  for (int i = 0; i < element_num; ++i) {
+    int_vec.push_back(1);
+  }
+  EXPECT_EQ(int_vec.size(), element_num);
+  int_vec.insert(int_vec.begin(), 1);
+  EXPECT_EQ(int_vec.size(), element_num + 1);
+  int_vec.resize(200);
+  int_vec.shrink_to_fit();
+  int_vec.clear();
+  EXPECT_EQ(int_vec.size(), 0);
+
+  std::vector<std::string, marl::StlAllocator<std::string>> str_vec{marl::StlAllocator<std::string>(allocator_)};
+  str_vec.push_back("hello, world");
+  EXPECT_EQ(str_vec.size(), 1);
+  str_vec.emplace_back("world, hello");
+  EXPECT_EQ(str_vec.size(), 2);
 }
