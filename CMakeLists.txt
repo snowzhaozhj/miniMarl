@@ -47,6 +47,7 @@ target_sources(miniMarlTests
             "${MINIMARL_TEST_DIR}/marl_test.hpp"
             "${MINIMARL_TEST_DIR}/marl_test.cpp"
             "${MINIMARL_TEST_DIR}/memory_test.cpp"
+            "${MINIMARL_TEST_DIR}/containers_test.cpp"
         )
 target_link_libraries(miniMarlTests miniMarl gmock gtest)
 add_test(NAME miniMarlTests COMMAND miniMarlTests)
