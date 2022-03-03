@@ -64,7 +64,7 @@ class vector {
   }
 
   template<int BASE_CAPACITY_2>
-  MARL_NO_EXPORT inline vector(const vector<T, BASE_CAPACITY_2> &&other,
+  MARL_NO_EXPORT inline vector(vector<T, BASE_CAPACITY_2> &&other,
                                Allocator *allocator = Allocator::Default)
       : allocator_(allocator) {
     *this = std::move(other);
