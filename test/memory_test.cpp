@@ -121,7 +121,6 @@ TEST_F(AllocatorTest, MakeUnique) {
   EXPECT_EQ(class_with_args->GetValue(), 2);
 }
 
-// TODO: Test Failed, Need To Fix
 TEST_F(AllocatorTest, MakeUniqueN) {
   size_t array_size = 2;
   auto struct_array = allocator_->make_unique_n<SimpleStruct>(array_size);
