@@ -244,11 +244,12 @@ class list {
     }
     MARL_NO_EXPORT inline iterator &operator++() {
       entry_ = entry_->next;
+      return *this;
     }
-    MARL_NO_EXPORT inline bool operator==(const iterator &rhs) {
+    MARL_NO_EXPORT inline bool operator==(const iterator &rhs) const {
       return entry_ == rhs.entry_;
     }
-    MARL_NO_EXPORT inline bool operator!=(const iterator &rhs) {
+    MARL_NO_EXPORT inline bool operator!=(const iterator &rhs) const {
       return entry_ != rhs.entry_;
     }
 
@@ -260,7 +261,7 @@ class list {
   MARL_NO_EXPORT inline list(Allocator *allocator = Allocator::Default)
       : allocator_(allocator) {}
   MARL_NO_EXPORT inline ~list() {
-    for (auto elem = head; elem != nullptr; ++elem) {
+    for (auto elem = head; elem != nullptr; elem = elem->next) {
       elem->data.~T();
     }
 
