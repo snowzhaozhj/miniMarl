@@ -87,7 +87,7 @@ inline void *alignedMalloc(size_t alignment, size_t size) {
   size_t alloc_size = size + alignment + sizeof(void *);
   auto allocation = malloc(alloc_size);
   auto aligned = reinterpret_cast<uint8_t *>(
-      marl::alighUp(reinterpret_cast<uintptr_t>(allocation),
+      marl::alignUp(reinterpret_cast<uintptr_t>(allocation),
                     alignment));
   // 将allocation指针复制到分配内存的尾端
   memcpy(aligned + size, &allocation, sizeof(void *));

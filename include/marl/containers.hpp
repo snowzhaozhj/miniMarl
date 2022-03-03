@@ -336,7 +336,7 @@ class list {
 template<typename T>
 void list<T>::grow(size_t count) {
   const auto entries_size = sizeof(Entry) * count;
-  const auto alloc_chain_offset = alighUp(entries_size, alignof(AllocationChain));
+  const auto alloc_chain_offset = alignUp(entries_size, alignof(AllocationChain));
   const auto alloc_size = alloc_chain_offset + sizeof(AllocationChain);
 
   Allocation::Request request;

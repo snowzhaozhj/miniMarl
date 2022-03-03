@@ -20,7 +20,7 @@ size_t pageSize();
 
 /// 将val向上对齐到alignment
 template<typename T>
-MARL_NO_EXPORT inline T alighUp(T val, T alignment) {
+MARL_NO_EXPORT inline T alignUp(T val, T alignment) {
   return alignment * ((val + alignment - 1) / alignment);
 }
 
