@@ -72,7 +72,15 @@ class vector {
 
   MARL_NO_EXPORT inline ~vector() { free(); }
 
-  MARL_NO_EXPORT inline vector &operator=(const vector &other);
+  MARL_NO_EXPORT inline vector &operator=(const vector &other) {
+    free();
+    reserve(other.size());
+    count_ = other.size();
+    for (size_t i = 0; i < count_; ++i) {
+      new (&reinterpret_cast<T *>(elements_)[i]) T(other[i]);
+    }
+    return *this;
+  }
 
   template<int BASE_CAPACITY_2>
   MARL_NO_EXPORT inline vector<T, BASE_CAPACITY> &operator=(
@@ -88,7 +96,7 @@ class vector {
 
   template<int BASE_CAPACITY_2>
   MARL_NO_EXPORT inline vector<T, BASE_CAPACITY> &operator=(
-      const vector<T, BASE_CAPACITY_2> &&other) {
+      vector<T, BASE_CAPACITY_2> &&other) {
     free();
     reserve(other.size());
     count_ = other.size();
@@ -177,7 +185,7 @@ class vector {
       request.usage = Allocation::Usage::Vector;
 
       auto alloc = allocator_->allocate(request);
-      auto grown = reinterpret_cast<TStorage>(alloc.ptr);
+      auto grown = reinterpret_cast<TStorage *>(alloc.ptr);
       for (size_t i = 0; i < count_; ++i) {
         new(&reinterpret_cast<T *>(grown)[i])
             T(std::move(reinterpret_cast<T *>(elements_)[i]));
