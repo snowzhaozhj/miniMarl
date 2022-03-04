@@ -223,6 +223,8 @@ class vector {
   Allocation allocation_;
 };
 
+/// list是一个类似std::list的容器，提供常量时间的插入和删除操作
+/// list保存了一条内存分配链，来避免插入和删除时重复的内存分配和释放
 template<typename T>
 class list {
   struct Entry {
