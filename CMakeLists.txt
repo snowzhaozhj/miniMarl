@@ -32,6 +32,7 @@ target_sources(miniMarl
         PUBLIC
             "${MINIMARL_INCLUDE_DIR}/marl/export.hpp"
             "${MINIMARL_INCLUDE_DIR}/marl/deprecated.hpp"
+            "${MINIMARL_INCLUDE_DIR}/marl/tsa.hpp"
             "${MINIMARL_INCLUDE_DIR}/marl/debug.hpp"
             "${MINIMARL_INCLUDE_DIR}/marl/memory.hpp"
             "${MINIMARL_INCLUDE_DIR}/marl/containers.hpp"
