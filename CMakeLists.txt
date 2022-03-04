@@ -37,6 +37,7 @@ target_sources(miniMarl
             "${MINIMARL_INCLUDE_DIR}/marl/memory.hpp"
             "${MINIMARL_INCLUDE_DIR}/marl/containers.hpp"
             "${MINIMARL_INCLUDE_DIR}/marl/mutex.hpp"
+            "${MINIMARL_INCLUDE_DIR}/marl/task.hpp"
         )
 target_include_directories(miniMarl
         PUBLIC ${MINIMARL_INCLUDE_DIR}
