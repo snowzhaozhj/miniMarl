@@ -29,6 +29,7 @@ target_sources(miniMarl
         PRIVATE
             "${MINIMARL_SOURCE_DIR}/debug.cpp"
             "${MINIMARL_SOURCE_DIR}/memory.cpp"
+            "${MINIMARL_SOURCE_DIR}/trace.cpp"
         PUBLIC
             "${MINIMARL_INCLUDE_DIR}/marl/export.hpp"
             "${MINIMARL_INCLUDE_DIR}/marl/deprecated.hpp"
@@ -40,6 +41,7 @@ target_sources(miniMarl
             "${MINIMARL_INCLUDE_DIR}/marl/task.hpp"
             "${MINIMARL_INCLUDE_DIR}/marl/finally.hpp"
             "${MINIMARL_INCLUDE_DIR}/marl/defer.hpp"
+            "${MINIMARL_INCLUDE_DIR}/marl/trace.hpp"
         )
 target_include_directories(miniMarl
         PUBLIC ${MINIMARL_INCLUDE_DIR}
