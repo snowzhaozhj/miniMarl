@@ -61,6 +61,7 @@ target_sources(miniMarlTests
             "${MINIMARL_TEST_DIR}/mutex_test.cpp"
             "${MINIMARL_TEST_DIR}/task_test.cpp"
             "${MINIMARL_TEST_DIR}/defer_test.cpp"
+            "${MINIMARL_TEST_DIR}/thread_test.cpp"
         )
 target_link_libraries(miniMarlTests miniMarl gmock gtest)
 add_test(NAME miniMarlTests COMMAND miniMarlTests)
