@@ -282,7 +282,7 @@ struct StlAllocator {
   };
 
   /// 通过allocator构造一个StlAllocator，allocator必须确保在StlAllocator被销毁前都是有效的
-  inline explicit StlAllocator(Allocator *allocator)
+  inline StlAllocator(Allocator *allocator)
       : allocator(allocator) {}
 
   template<typename U>
