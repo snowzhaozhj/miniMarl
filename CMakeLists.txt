@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
-project(miniMarl)
+project(miniMarl
+        LANGUAGES C CXX ASM)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -31,6 +32,10 @@ target_sources(miniMarl
             "${MINIMARL_SOURCE_DIR}/memory.cpp"
             "${MINIMARL_SOURCE_DIR}/trace.cpp"
             "${MINIMARL_SOURCE_DIR}/thread.cpp"
+            "${MINIMARL_SOURCE_DIR}/osfiber.hpp"
+            "${MINIMARL_SOURCE_DIR}/arch/osfiber_asm_x64.S"
+            "${MINIMARL_SOURCE_DIR}/arch/osfiber_x64.c"
+            "${MINIMARL_SOURCE_DIR}/scheduler.cpp"
         PUBLIC
             "${MINIMARL_INCLUDE_DIR}/marl/export.hpp"
             "${MINIMARL_INCLUDE_DIR}/marl/deprecated.hpp"
@@ -45,6 +50,7 @@ target_sources(miniMarl
             "${MINIMARL_INCLUDE_DIR}/marl/defer.hpp"
             "${MINIMARL_INCLUDE_DIR}/marl/trace.hpp"
             "${MINIMARL_INCLUDE_DIR}/marl/thread.hpp"
+            "${MINIMARL_INCLUDE_DIR}/marl/scheduler.hpp"
         )
 target_include_directories(miniMarl
         PUBLIC ${MINIMARL_INCLUDE_DIR}

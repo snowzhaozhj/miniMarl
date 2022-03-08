@@ -1,4 +1,5 @@
 #include "marl/debug.hpp"
+#include "marl/scheduler.hpp"
 
 #include <cstdarg>
 #include <cstdlib>
@@ -23,7 +24,8 @@ void warn(const char *msg, ...) {
 
 void assert_has_bound_scheduler(const char *feature) {
   (void)feature;  // 防止编译器警告
-  // TODO
+//  MARL_ASSERT(Scheduler::get() != nullptr,
+//              "%s requires a marl::Scheduler to be bound", feature);
 }
 
 }
