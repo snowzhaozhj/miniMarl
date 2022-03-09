@@ -2,13 +2,15 @@
 
 #include "marl_test.hpp"
 
+using namespace std::chrono_literals;
+
 class ConditionVariableTestWithoutBound : public WithoutBoundScheduler {};
 
 class ConditionVariableTestWithBound : public WithBoundScheduler {};
 
 INSTANTIATE_WithBoundSchedulerTest(ConditionVariableTestWithBound);
 
-TEST_F(ConditionVariableTestWithoutBound, Base) {
+TEST_F(ConditionVariableTestWithoutBound, Wait) {
   bool trigger[3] = {false, false, false};
   bool signal[3] = {false, false, false};
   marl::mutex mutex;
@@ -51,7 +53,44 @@ TEST_F(ConditionVariableTestWithoutBound, Base) {
   thread.join();
 }
 
-TEST_P(ConditionVariableTestWithBound, Base) {
+TEST_F(ConditionVariableTestWithoutBound, WaitForNoTimeout) {
+  bool signal = false;
+  marl::mutex mutex;
+  marl::ConditionVariable cv;
+  std::thread thread([&] {
+    marl::lock lock(mutex);
+    bool res = cv.wait_for(lock, 30ms, [&] {
+      EXPECT_TRUE(lock.owns_lock());
+      return signal;
+    });
+    EXPECT_TRUE(res);
+    EXPECT_TRUE(lock.owns_lock());
+  });
+  signal = true;
+  cv.notify_one();
+  thread.join();
+}
+
+TEST_F(ConditionVariableTestWithoutBound, WaitForTimeout) {
+  bool signal = false;
+  marl::mutex mutex;
+  marl::ConditionVariable cv;
+  std::thread thread([&] {
+    marl::lock lock(mutex);
+    auto res = cv.wait_for(lock, 20ms, [&] {
+      EXPECT_TRUE(lock.owns_lock());
+      return signal;
+    });
+    EXPECT_FALSE(res);
+    EXPECT_TRUE(lock.owns_lock());
+  });
+  std::this_thread::sleep_for(30ms);
+  signal = true;
+  cv.notify_one();
+  thread.join();
+}
+
+TEST_P(ConditionVariableTestWithBound, Wait) {
   bool trigger[3] = {false, false, false};
   bool signal[3] = {false, false, false};
   marl::mutex mutex;
@@ -91,5 +130,42 @@ TEST_P(ConditionVariableTestWithBound, Base) {
     ASSERT_EQ(signal[2], 2 <= i);
   }
 
+  thread.join();
+}
+
+TEST_P(ConditionVariableTestWithBound, WaitForNoTimeout) {
+  bool signal = false;
+  marl::mutex mutex;
+  marl::ConditionVariable cv;
+  std::thread thread([&] {
+    marl::lock lock(mutex);
+    bool res = cv.wait_for(lock, 30ms, [&] {
+      EXPECT_TRUE(lock.owns_lock());
+      return signal;
+    });
+    EXPECT_TRUE(res);
+    EXPECT_TRUE(lock.owns_lock());
+  });
+  signal = true;
+  cv.notify_one();
+  thread.join();
+}
+
+TEST_P(ConditionVariableTestWithBound, WaitForTimeout) {
+  bool signal = false;
+  marl::mutex mutex;
+  marl::ConditionVariable cv;
+  std::thread thread([&] {
+    marl::lock lock(mutex);
+    auto res = cv.wait_for(lock, 20ms, [&] {
+      EXPECT_TRUE(lock.owns_lock());
+      return signal;
+    });
+    EXPECT_FALSE(res);
+    EXPECT_TRUE(lock.owns_lock());
+  });
+  std::this_thread::sleep_for(30ms);
+  signal = true;
+  cv.notify_one();
   thread.join();
 }
