@@ -406,6 +406,8 @@ bool Scheduler::Worker::wait(marl::lock &wait_lock, const TimePoint *timeout, co
     // fiber已经恢复，无需再持有锁
     work_.mutex.unlock();
 
+    wait_lock.lock_no_tsa();
+
     if (timeout != nullptr && std::chrono::system_clock::now() >= *timeout) {
       return false;
     }
@@ -474,6 +476,7 @@ void Scheduler::Worker::enqueue(Fiber *fiber) {
     MARL_ASSERT(!work_.waiting.contains(fiber),
                 "fiber is unexpectedly in the waiting list");
     setFiberState(fiber, Fiber::State::Queued);
+    ++work_.num;
   }
   if (notify) {
     work_.added.notify_one();

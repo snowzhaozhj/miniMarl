@@ -61,7 +61,7 @@ class ConditionVariable {
 
       mutex_.lock();
       waiting_.erase(it);
-      mutex_.lock();
+      mutex_.unlock();
     } else {
       /// 运行在非fiber环境，直接委托给std::condition_variable
       ++num_waiting_on_condition;
@@ -101,7 +101,7 @@ class ConditionVariable {
 
       mutex_.lock();
       waiting_.erase(it);
-      mutex_.lock();
+      mutex_.unlock();
     } else {
       /// 运行在非fiber环境，直接委托给std::condition_variable
       ++num_waiting_on_condition;
