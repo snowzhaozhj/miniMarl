@@ -51,6 +51,7 @@ target_sources(miniMarl
             "${MINIMARL_INCLUDE_DIR}/marl/trace.hpp"
             "${MINIMARL_INCLUDE_DIR}/marl/thread.hpp"
             "${MINIMARL_INCLUDE_DIR}/marl/scheduler.hpp"
+            "${MINIMARL_INCLUDE_DIR}/marl/condition_variable.hpp"
         )
 target_include_directories(miniMarl
         PUBLIC ${MINIMARL_INCLUDE_DIR}
