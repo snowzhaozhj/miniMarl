@@ -4,7 +4,7 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 
-#include "marl/memory.hpp"
+#include "marl/scheduler.hpp"
 
 class WithoutBoundScheduler : public testing::Test {
  public:
@@ -18,6 +18,41 @@ class WithoutBoundScheduler : public testing::Test {
     delete allocator_;
   }
 
+  marl::TrackedAllocator *allocator_ = nullptr;
+};
+
+struct SchedulerParams {
+  int num_worker_threads;
+
+  friend std::ostream &operator<<(std::ostream &os,
+                                  const SchedulerParams &params) {
+    return os << "SchedulerParams{"
+              << "numWorkerThreads: " << params.num_worker_threads << "}";
+  }
+};
+
+class WithBoundScheduler : public testing::TestWithParam<SchedulerParams> {
+ public:
+  void SetUp() override {
+    allocator_ = new marl::TrackedAllocator(marl::Allocator::Default);
+    auto &params = GetParam();
+    marl::Scheduler::Config cfg;
+    cfg.setAllocator(allocator_)
+        .setWorkerThreadCount(params.num_worker_threads)
+        .setFiberStackSize(0x10000);
+    auto scheduler = new marl::Scheduler(cfg);
+    scheduler->bind();
+  }
+  void TearDown() override {
+    auto scheduler = marl::Scheduler::get();
+    marl::Scheduler::unbind();
+    delete scheduler;
+
+    auto stats = allocator_->stats();
+    ASSERT_EQ(stats.numAllocations(), 0);
+    ASSERT_EQ(stats.bytesAllocated(), 0);
+    delete allocator_;
+  }
   marl::TrackedAllocator *allocator_ = nullptr;
 };
 
