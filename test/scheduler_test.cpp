@@ -8,14 +8,7 @@ class SchedulerTestWithoutBound : public WithoutBoundScheduler {};
 
 class SchedulerTestWithBound : public WithBoundScheduler {};
 
-INSTANTIATE_TEST_SUITE_P(SchedulerParams,
-                         SchedulerTestWithBound,
-                         testing::Values(SchedulerParams{0},  // Single-threaded mode test
-                                         SchedulerParams{1},  // Single worker thread
-                                         SchedulerParams{2},  // 2 worker threads...
-                                         SchedulerParams{4},
-                                         SchedulerParams{8},
-                                         SchedulerParams{64}));
+INSTANTIATE_WithBoundSchedulerTest(SchedulerTestWithBound);
 
 TEST_F(SchedulerTestWithoutBound, ConstructAndDestruct) {
   auto scheduler = std::make_unique<marl::Scheduler>(

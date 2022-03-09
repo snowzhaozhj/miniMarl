@@ -6,14 +6,7 @@ class ConditionVariableTestWithoutBound : public WithoutBoundScheduler {};
 
 class ConditionVariableTestWithBound : public WithBoundScheduler {};
 
-INSTANTIATE_TEST_SUITE_P(SchedulerParams,
-                         ConditionVariableTestWithBound,
-                         testing::Values(SchedulerParams{0},  // Single-threaded mode test
-                                         SchedulerParams{1},  // Single worker thread
-                                         SchedulerParams{2},  // 2 worker threads...
-                                         SchedulerParams{4},
-                                         SchedulerParams{8},
-                                         SchedulerParams{64}));
+INSTANTIATE_WithBoundSchedulerTest(ConditionVariableTestWithBound);
 
 TEST_F(ConditionVariableTestWithoutBound, Base) {
   bool trigger[3] = {false, false, false};

@@ -56,4 +56,14 @@ class WithBoundScheduler : public testing::TestWithParam<SchedulerParams> {
   marl::TrackedAllocator *allocator_ = nullptr;
 };
 
+#define INSTANTIATE_WithBoundSchedulerTest(SubClass) \
+  INSTANTIATE_TEST_SUITE_P(SchedulerParams,  \
+                           SubClass,         \
+                           testing::Values(SchedulerParams{0},  \
+                                           SchedulerParams{1},  \
+                                           SchedulerParams{2},  \
+                                           SchedulerParams{4},  \
+                                           SchedulerParams{8},  \
+                                           SchedulerParams{64}));
+
 #endif //MINIMARL_TEST_MARL_TEST_HPP_
