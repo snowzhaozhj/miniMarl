@@ -65,6 +65,3 @@ TEST_P(SchedulerTestWithBound, DestructWithPendingTasks) {
 
   (new marl::Scheduler(marl::Scheduler::Config()))->bind();
 }
-
-TEST_P(SchedulerTestWithBound, )
-
