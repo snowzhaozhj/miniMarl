@@ -6,6 +6,10 @@
 
 #include "marl/scheduler.hpp"
 
+auto timeLater(const std::chrono::system_clock::duration &duration) {
+  return std::chrono::system_clock::now() + duration;
+}
+
 class WithoutBoundScheduler : public testing::Test {
  public:
   void SetUp() override {

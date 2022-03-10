@@ -17,11 +17,6 @@ class LockTest : public testing::Test {
   marl::mutex mutex_;
 };
 
-auto timeLater(const std::chrono::system_clock::duration &duration) {
-  return std::chrono::system_clock::now() + duration;
-}
-
-
 TEST_F(MutexTest, TryLock) {
   mutex_.lock();
   EXPECT_FALSE(mutex_.try_lock());
