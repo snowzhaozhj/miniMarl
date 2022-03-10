@@ -53,6 +53,7 @@ target_sources(miniMarl
             "${MINIMARL_INCLUDE_DIR}/marl/scheduler.hpp"
             "${MINIMARL_INCLUDE_DIR}/marl/condition_variable.hpp"
             "${MINIMARL_INCLUDE_DIR}/marl/wait_group.hpp"
+            "${MINIMARL_INCLUDE_DIR}/marl/blocking_call.hpp"
         )
 target_include_directories(miniMarl
         PUBLIC ${MINIMARL_INCLUDE_DIR}
