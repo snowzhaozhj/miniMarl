@@ -6,7 +6,7 @@
 
 #include "marl/scheduler.hpp"
 
-auto timeLater(const std::chrono::system_clock::duration &duration) {
+inline auto timeLater(const std::chrono::system_clock::duration &duration) {
   return std::chrono::system_clock::now() + duration;
 }
 

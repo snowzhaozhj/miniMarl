@@ -42,7 +42,7 @@ class Event {
   /// @return 如果是超时导致返回，则返回false，否则返回true
   template<typename Rep, typename Period>
   MARL_NO_EXPORT inline bool wait_for(const std::chrono::duration<Rep, Period> &duration) const {
-    return shared_->template wait_for(duration);
+    return shared_->wait_for(duration);
   }
 
   template<typename Clock, typename Duration>
@@ -77,7 +77,7 @@ class Event {
                                          const Iterator &end) {
     Event any(mode, false);
     for (auto it = begin; it != end; ++it) {
-      auto s = it->shared;
+      auto s = it->shared_;
       marl::lock lock(s->mutex);
       if (s->signalled) {
         any.signal();
