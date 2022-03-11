@@ -528,7 +528,7 @@ void Scheduler::Worker::run() {
 }
 
 void Scheduler::Worker::runUntilShutdown() {
-  while (!shutdown || work_.num > 0 || work_.num_blocked_fibers) {
+  while (!shutdown || work_.num > 0 || work_.num_blocked_fibers > 0) {
     waitForWork();
     runUntilIdle();
   }
@@ -559,6 +559,7 @@ void Scheduler::Worker::enqueueFiberTimeouts() {
   auto now = std::chrono::system_clock::now();
   while (auto fiber = work_.waiting.take(now)) {
     changeFiberState(fiber, Fiber::State::Waiting, Fiber::State::Queued);
+    DBG_LOG("%d: TIMEOUT(%d)", (int)id, (int)fiber->id);
     work_.fibers.push_back(fiber);
     ++work_.num;
   }
