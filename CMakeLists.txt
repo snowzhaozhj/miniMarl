@@ -55,6 +55,7 @@ target_sources(miniMarl
             "${MINIMARL_INCLUDE_DIR}/marl/wait_group.hpp"
             "${MINIMARL_INCLUDE_DIR}/marl/blocking_call.hpp"
             "${MINIMARL_INCLUDE_DIR}/marl/event.hpp"
+            "${MINIMARL_INCLUDE_DIR}/marl/dag.hpp"
         )
 target_include_directories(miniMarl
         PUBLIC ${MINIMARL_INCLUDE_DIR}
@@ -78,6 +79,7 @@ target_sources(miniMarlTests
             "${MINIMARL_TEST_DIR}/wait_group_test.cpp"
             "${MINIMARL_TEST_DIR}/blocking_call_test.cpp"
             "${MINIMARL_TEST_DIR}/event_test.cpp"
+            "${MINIMARL_TEST_DIR}/dag_test.cpp"
         )
 target_link_libraries(miniMarlTests miniMarl gmock gtest)
 add_test(NAME miniMarlTests COMMAND miniMarlTests)
